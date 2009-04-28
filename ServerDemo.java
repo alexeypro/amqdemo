@@ -88,15 +88,12 @@ public class ServerDemo implements MessageListener, ExceptionListener {
 																																										ActiveMQConnection.DEFAULT_PASSWORD,
 																																										ActiveMQConnection.DEFAULT_BROKER_URL);
         QueueConnection replyConnection = connectionFactory.createQueueConnection();
-				System.out.println("[SERVER] Reply: Prepared Queue connection and configuring...");
 				replyConnection.setExceptionListener(this);
 				replyConnection.start();
 				QueueSession replySession = (QueueSession) replyConnection.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-				System.out.println("[SERVER] Reply: Created session...");								
 				Queue queue = (Queue) msg.getJMSReplyTo();
 				QueueSender sender = replySession.createSender(queue);
 				BytesMessage responseMessage = replySession.createBytesMessage();
-				System.out.println("[SERVER] Reply: Got Queue name from reply-to and created Sender...");								
 				responseMessage.writeUTF("Response to ... to " + msg.getJMSReplyTo());
 				sender.send(responseMessage);
 				replySession.commit();

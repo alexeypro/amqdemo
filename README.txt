@@ -1,5 +1,4 @@
-Simple demo of Java on the backend, Ruby w/ Sinatra framework on the frontend, communicating asynchronously through ActiveMQ, and 
-a little help from memcached.
+Simple demo of Java on the backend, Ruby w/ Sinatra framework on the frontend, communicating asynchronously through ActiveMQ, and a little help from memcached.
 
 Assuming you have ActiveMQ download and installed in /usr/local/activemq:
 
