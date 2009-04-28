@@ -22,10 +22,15 @@ import javax.jms.TextMessage;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
- 
+
+//
+// took the code from http://weblog.plexobject.com/?p=1368
+// it seemed to be the cleanest, than if I'd put atomkeep's here :-)
+//
 public class ServerDemo implements MessageListener, ExceptionListener {
      Session session;
 
+		 // we will "listen" for the incoming requests here
      public ServerDemo() throws Exception {
 				ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER, 
 																																										ActiveMQConnection.DEFAULT_PASSWORD,
@@ -40,16 +45,19 @@ public class ServerDemo implements MessageListener, ExceptionListener {
 				System.out.println("[SERVER] Waiting on /queue/" + q.getQueueName());				
 		}
 		
+		// not implemented, but should be :-)
 		private void close() throws Exception {
 				if (session != null) session.close();
 				//if (connection != null) connection.close();
 		}
 		
+		// launch ourselves, "entry point"
 		public static void main(String[] args) throws Exception {
 				new ServerDemo();
 				Thread.currentThread().join();
 		}
 		
+		// wow, we received message, let's work with it here
 		public void onMessage(Message message) {
 				try {
 						System.out.println("[SERVER] Message arrived...");	
@@ -66,23 +74,28 @@ public class ServerDemo implements MessageListener, ExceptionListener {
 						} else {
 								System.out.println("[SERVER] Unknown Message: " + message);
 						}
-						session.commit();
+						session.commit();				
+								
+						// emulate the job here, 
 						System.out.print("[SERVER] Doing the job: ");
 						for (int i = 0; i <= 7; i++) {
 								System.out.print(".");
 								Thread.sleep(1000); // 1 secs								
 						}
 						System.out.println(" Done!");
+												
 						reply(message);
 				} catch (Exception e) {
 						e.printStackTrace();
 				}
 		}
 		
+		// yeah, yeah, exceptions
 		synchronized public void onException(JMSException ex) {
 				System.out.println("[SERVER] JMS Exception occured. " + ex);
 		}
 		
+		// we need to reply (but not necessary to do it always! :-)
 		public void reply(Message msg) throws Exception {
 				ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER,
 																																										ActiveMQConnection.DEFAULT_PASSWORD,
